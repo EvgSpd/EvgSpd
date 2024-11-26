@@ -2,8 +2,13 @@
 Telegram Desktop exports contact list in JSON format. 
 This is a converter to prepare this JSON file to VCF format for import on mobile devices (Android, Phone) and email client.
 
+Features:
+merge duplicates by number
+records different subscriber numbers in one card
 
+Dependencies:
 Python 3.5+ required
+
 
 USAGE:
 easy way:
