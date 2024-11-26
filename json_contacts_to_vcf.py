@@ -24,7 +24,14 @@ def get_contacts_from_json(path='result.json')->list:
             
     print(f'json have {len(_base_list)}  notes, was chosen  {len(_ld)} contacts')
     return _ld
-
+    
+def compare(_lt)->str:
+    t=list(filter(None, _lt))
+    if not t:
+        return ''
+    else:
+        return min(t)
+        
 def merging_duplicates(_ld)->list: #объединяет схожие записи по имени или номеру
     _phone_d={} 
     _name_d={} 
@@ -34,8 +41,8 @@ def merging_duplicates(_ld)->list: #объединяет схожие запис
         if k['phone_number'] in _phone_d:
             _merged.extend([ _phone_d[k['phone_number']]['id']+k['phone_number'],  k['id']+k['phone_number'] ])
             
-            _phone_d[k['phone_number']]['last_name']=min( _phone_d[k['phone_number']]['last_name'], k['last_name'])
-            _phone_d[k['phone_number']]['first_name']=min( _phone_d[k['phone_number']]['first_name'], k['first_name'])        
+            _phone_d[k['phone_number']]['last_name']=compare( _phone_d[k['phone_number']]['last_name'], k['last_name'])
+            _phone_d[k['phone_number']]['first_name']=compare( _phone_d[k['phone_number']]['first_name'], k['first_name'])        
         else:
             _phone_d[k['phone_number']]=k
 
