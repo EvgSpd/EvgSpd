@@ -66,7 +66,7 @@ def write_vcf(rows, path=''):
         for row in rows:
             st='BEGIN:VCARD\n'
             st+='VERSION:3.0\n'
-            st+=f'''N:{row['first_name']};{row['last_name']};;;\n'''
+            st+=f'''N:{row['last_name']};{row['first_name']};;;\n'''
             st+=f'''FN:{row['id']}\n'''
             st+="\n".join([f'TEL;TYPE=CELL:{k}' for k in row['phone_number'].split(';') ])+"\n" #по одному номеру на строку
             #st+=f'EMAIL:{row[3]}\n'
