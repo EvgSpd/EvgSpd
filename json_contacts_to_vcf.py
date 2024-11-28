@@ -7,10 +7,12 @@ import json
 #USAGE:
 #json_contacts_to_vcf.py path_to/contacts.json
 
-def get_contacts_from_json(path='result.json')->list:    
+def parse_json(path='result.json')->list:    
     with open(path, 'r',encoding='utf-8') as file:
-        _base_list = json.load(file)['contacts']['list']
-        
+        _base_list = json.load(file)  #['contacts']['list']
+    try:
+        _base_list=_base_list['contacts']['list'] #for tg desctop export
+    except: pass    
     fields=('last_name', 'first_name', 'phone_number') # формируем рабочий список без лишних записей и ключей
     _ld=[]
     for k in _base_list:
@@ -30,7 +32,7 @@ def compare(_lt)->str:
     if not t:
         return ''
     else:
-        return min(t)
+        return min(t).strip()
         
 def merging_duplicates(_ld)->list: #объединяет схожие записи по имени или номеру
     _phone_d={} 
@@ -41,8 +43,8 @@ def merging_duplicates(_ld)->list: #объединяет схожие запис
         if k['phone_number'] in _phone_d:
             _merged.extend([ _phone_d[k['phone_number']]['id']+k['phone_number'],  k['id']+k['phone_number'] ])
             
-            _phone_d[k['phone_number']]['last_name']=compare( _phone_d[k['phone_number']]['last_name'], k['last_name'])
-            _phone_d[k['phone_number']]['first_name']=compare( _phone_d[k['phone_number']]['first_name'], k['first_name'])        
+            _phone_d[k['phone_number']]['last_name']=compare( [_phone_d[k['phone_number']]['last_name'], k['last_name'] ] )
+            _phone_d[k['phone_number']]['first_name']=compare( [_phone_d[k['phone_number']]['first_name'], k['first_name'] ] )        
         else:
             _phone_d[k['phone_number']]=k
 
@@ -85,7 +87,7 @@ def main(args):
     else:
         path = 'result.json'
         
-    rows=get_contacts_from_json(path)
+    rows=parse_json(path)
     rows=merging_duplicates(rows) #optional
     write_vcf(rows, path)
 
